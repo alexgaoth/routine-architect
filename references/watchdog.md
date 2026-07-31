@@ -35,7 +35,15 @@ garbage," not just "didn't run."
 | UNKNOWN | manifest entry malformed or artifact type unrecognized — always report, never skip silently |
 
 Escalation: if the previous watchdog report (search own past drafts) already
-FAILed the same routine, prefix the subject with `ALERT: `.
+FAILed the same routine, prefix the subject with `ALERT: `. If the manifest's
+`watchdog.escalation.ntfy_topic` is set, a repeat failure additionally sends
+a push notification via ntfy (the one case where the watchdog does more than
+draft — it is still not writing to any repo).
+
+Health history: every report ends with a machine-readable `STATUS {...}`
+JSON line. The watchdog never writes files; instead, the *reconcile* step
+(R2) compacts these lines from recent drafts into `fleet/logs/health.jsonl`
+in the ops repo. Read-only watchdog, durable history.
 
 ## Template prompt
 
@@ -84,6 +92,12 @@ that is a sign the fleet changed without a reconcile.
 Step 4 — Escalation. Search your own previous drafts (subject starting
 "Routine watchdog — ") from the last 3 days. If a routine you are FAILing
 now was already FAILed in the most recent report, this is a repeat failure.
+{{IF_NTFY: If any repeat failure exists, also send a push notification:
+run `curl -s -H "Title: Routine watchdog ALERT" -d "<one-line summary of
+which routines are failing and since when>" https://ntfy.sh/{{NTFY_TOPIC}}`.
+Send at most one notification per run, only for repeat failures — never for
+first failures, WARNs, or OK runs. — omit this whole block if the manifest
+has no watchdog.escalation.ntfy_topic}}
 
 Step 5 — Report. Create ONE Gmail draft (never send) to {{NOTIFY_EMAIL}},
 subject "Routine watchdog — <today YYYY-MM-DD>", prefixed with "ALERT: " if
@@ -92,9 +106,13 @@ any repeat failure exists. Body: one section per routine — status word, then
 "Action needed": a short imperative list of what the human should do
 (including "run the routine-architect skill to reconcile" whenever you found
 UNKNOWN entries, undeclared automation, or a stale manifest), or "None."
-Keep the whole report under ~50 lines. If you yourself hit errors (Gmail
-tools failing, a repo missing from your workspace), report that honestly in
-the draft rather than guessing — a watchdog that cannot see must say so.
+The VERY LAST line of the body must be machine-readable, exactly:
+STATUS {"<slug>": "<OK|IDLE-OK|WARN|FAIL|PAUSED|UNKNOWN>", ...}
+with one entry per routine audited (this line feeds the fleet's health
+history). Keep the whole report under ~50 lines. If you yourself hit errors
+(Gmail tools failing, a repo missing from your workspace), report that
+honestly in the draft rather than guessing — a watchdog that cannot see
+must say so.
 ```
 
 ## Deployment checklist

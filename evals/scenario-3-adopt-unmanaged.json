@@ -1,0 +1,13 @@
+{
+  "skills": ["routine-architect"],
+  "query": "Set up proper routine management for me. I already have a couple of routines I made by hand.",
+  "setup": "Two deployed routines exist without the '(routine-architect)' suffix: a nightly digest and a scraper alert fixer with its audit list baked into its prompt. No watchdog exists.",
+  "expected_behavior": [
+    "Enters bootstrap mode (no managed watchdog found) but does NOT propose duplicates of the two existing routines",
+    "Offers per-routine: adopt into the manifest (entry mirroring live config, including declaring artifact contracts for what they already produce) or acknowledge as unmanaged",
+    "For adopted routines, renames the deployment to add the '(routine-architect)' suffix or records the exception explicitly",
+    "Writes prompt files capturing the EXACT deployed prompts byte-for-byte so drift detection works from day one",
+    "Runs scripts/validate_fleet.py and resolves findings before deploying the watchdog",
+    "Deploys the watchdog with sources covering the ops repo plus every repo in adopted artifact contracts, and explains that future changes go through reconcile runs"
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "manifest_version": 1,
+  "generated_by": "routine-architect",
+  "updated_at": "2026-07-30T21:00:00Z",
+  "timezone": "America/Los_Angeles",
+  "notify_email": "user@example.com",
+  "ops_repo": "https://github.com/example/ops-repo",
+  "watchdog": {
+    "trigger_id": "trig_wd001",
+    "cron_utc": "0 15 * * *",
+    "prompt_file": "fleet/prompts/watchdog.md"
+  },
+  "unmanaged_acknowledged": [],
+  "routines": [
+    {
+      "slug": "code-digest",
+      "name": "Code digest (routine-architect)",
+      "trigger_id": "trig_cd001",
+      "archetype": "digest-notifier",
+      "status": "active",
+      "cron_utc": "50 6 * * *",
+      "cadence_human": "daily 11:50pm America/Los_Angeles",
+      "cadence_local": {"cron_local": "50 23 * * *"},
+      "prompt_file": "fleet/prompts/code-digest.md",
+      "model": "claude-sonnet-5",
+      "allowed_tools": ["Bash", "Read", "Glob", "Grep", "mcp__Gmail__*"],
+      "sources": ["https://github.com/example/webapp"],
+      "connectors": ["Gmail"],
+      "artifacts": [
+        {"type": "gmail_draft", "subject_prefix": "Code digest — ", "window_hours": 26, "may_be_absent_when_idle": false}
+      ],
+      "inputs_crosscheck": [],
+      "purpose": "Nightly draft summarizing pushed commits."
+    },
+    {
+      "slug": "alert-responder",
+      "name": "Webapp alert responder (routine-architect)",
+      "trigger_id": "trig_ar001",
+      "archetype": "alert-responder",
+      "status": "active",
+      "cron_utc": "13 5,17 * * *",
+      "cadence_human": "every 12h at 10:13pm/10:13am America/Los_Angeles",
+      "prompt_file": "fleet/prompts/alert-responder.md",
+      "model": "claude-sonnet-5",
+      "allowed_tools": ["Bash", "Read", "Write", "Edit", "Glob", "Grep"],
+      "sources": ["https://github.com/example/webapp"],
+      "connectors": ["Gmail"],
+      "artifacts": [
+        {"type": "git_commits", "repo": "https://github.com/example/webapp", "branch": "main", "window_hours": 14, "may_be_absent_when_idle": true},
+        {"type": "log_append", "repo": "https://github.com/example/webapp", "path": "docs/QUALITY_LOG.md", "window_hours": 14, "may_be_absent_when_idle": true}
+      ],
+      "inputs_crosscheck": [
+        {"type": "gmail_alerts", "from": "alerts@example.com", "subject_prefix": "[ERROR]", "window_hours": 14}
+      ],
+      "purpose": "Root-causes alert emails and pushes fixes."
+    }
+  ]
+}

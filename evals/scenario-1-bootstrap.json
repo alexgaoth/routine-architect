@@ -1,0 +1,12 @@
+{
+  "skills": ["routine-architect"],
+  "query": "I want to be emailed about what happens in my repos, and I want my error alert emails to get investigated and fixed automatically. My repos are github.com/example/webapp and github.com/example/api. I'm in Berlin.",
+  "expected_behavior": [
+    "Lists existing deployed routines before proposing anything, and enters bootstrap mode only after finding no managed watchdog",
+    "Interviews for notification channel, unattended-change tolerance, and ops repo choice before designing",
+    "Proposes a fleet table (archetype, cadence, artifact contract) and gets agreement before writing prompts",
+    "Writes fleet/fleet.json plus one prompt file per routine from templates/, runs scripts/validate_fleet.py, and commits+pushes the ops repo BEFORE deploying",
+    "Converts Berlin local times to UTC crons, confirms the conversion explicitly, and staggers schedules so the watchdog fires after all other windows close",
+    "Deploys routines one at a time, writes returned trigger_ids back into the manifest, deploys the watchdog last with the ops repo as first git source, and ends with a hand-off table including usage estimates"
+  ]
+}

@@ -56,7 +56,8 @@ and treat the run as a **repair** (reconcile with a missing-watchdog defect).
   "watchdog": {
     "trigger_id": "trig_...",
     "cron_utc": "0 15 * * *",
-    "prompt_file": "fleet/prompts/watchdog.md"
+    "prompt_file": "fleet/prompts/watchdog.md",
+    "escalation": {"ntfy_topic": "long-random-topic-name"}
   },
   "unmanaged_acknowledged": [
     {"trigger_id": "trig_...", "name": "...", "note": "user's pre-existing routine, left alone"}
@@ -70,6 +71,7 @@ and treat the run as a **repair** (reconcile with a missing-watchdog defect).
       "status": "active",
       "cron_utc": "50 6 * * *",
       "cadence_human": "daily 11:50pm America/Los_Angeles",
+      "cadence_local": {"cron_local": "50 23 * * *"},
       "prompt_file": "fleet/prompts/code-digest.md",
       "model": "claude-sonnet-5",
       "allowed_tools": ["Bash", "Read", "Glob", "Grep", "mcp__Gmail__*"],
@@ -105,6 +107,20 @@ Field rules:
 - `sources` / `connectors` / `allowed_tools` / `model` / `cron_utc`: must
   mirror the deployed config exactly — these are the fields drift is
   detected on.
+- `cadence_local` (optional but recommended): the schedule as the user means
+  it, in their timezone. `cron_utc` is derived from it; when a DST shift
+  makes them disagree, the validator flags DST drift and reconcile
+  re-derives `cron_utc` (the local intent wins).
+- `watchdog.escalation.ntfy_topic` (optional): enables push notification on
+  repeat failures — see [notifications.md](notifications.md) for topic-name
+  security.
+
+**Validator:** `scripts/validate_fleet.py fleet/fleet.json` checks all of
+the rules above deterministically (schema, slugs, naming, cron validity and
+sub-hourly rejection, artifact contracts, window-vs-cadence gaps, DST drift,
+prompt files) and prints per-routine usage estimates (runs/month). Run it
+after authoring (B4), after loading (R1), and before committing (R6); it
+must PASS before any deploy.
 
 ## Artifact contract types
 
@@ -141,7 +157,13 @@ schema violations are defects to fix this run (with the user's confirmation).
 
 **R2 — Health history.** Search the user's Gmail drafts for recent
 `Routine watchdog —` reports (last 7 days). Summarize any WARN/FAIL to the
-user — reconciliation starts from known health, not assumptions.
+user — reconciliation starts from known health, not assumptions. Then
+compact: parse each report's final `STATUS {...}` line and append any dates
+not yet recorded to `fleet/logs/health.jsonl` in the ops repo, one line per
+report: `{"date": "YYYY-MM-DD", "status": {<slug>: <STATUS>, ...}}`. (The
+watchdog is read-only; this supervised step is the only writer of the
+health log.) Mention streaks — a routine FAILing 3+ consecutive reports is
+a headline finding.
 
 **R3 — Diff.** List deployed routines. Match manifest entries to deployed
 routines by `trigger_id` (fallback: exact `name`). Classify every mismatch:
@@ -155,6 +177,7 @@ routines by `trigger_id` (fallback: exact `name`). Classify every mismatch:
 | PAUSED-LIVE | manifest `paused`, deployed enabled | disable the deployment |
 | RETIRED-LIVE | manifest `retired`, deployed enabled | disable; remind user deletion is manual |
 | STALE-WATCHDOG | a repo in any artifact contract missing from watchdog's sources; or a contract type absent from its prompt | update the watchdog deployment and `fleet/prompts/watchdog.md` |
+| DST-DRIFT | `cadence_local` no longer maps to `cron_utc` under the current UTC offset (validator E403) | re-derive `cron_utc` from `cadence_local`, update manifest and deployment |
 
 Present the full classification table to the user before applying anything.
 
@@ -192,7 +215,7 @@ leave open.
 
 Before ending any bootstrap or reconcile, verify:
 
-- [ ] Manifest validates against the schema; `updated_at` refreshed
+- [ ] `scripts/validate_fleet.py fleet/fleet.json` exits PASS; `updated_at` refreshed
 - [ ] Every `active` routine deployed, enabled, trigger_id recorded
 - [ ] Every deployed managed routine matches its manifest entry field-for-field
 - [ ] Watchdog deployed, its sources ⊇ {ops repo} ∪ {all artifact repos},

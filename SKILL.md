@@ -49,6 +49,17 @@ list deployed routines (in Claude Code: the bundled `schedule` skill /
 **Reconcile mode**. Otherwise → **Bootstrap mode**. (Existing unmanaged
 routines in bootstrap mode get adopted in step B4.)
 
+If the skill was invoked with arguments, they select a fast path (mode
+detection still runs first, and a fast path on an unmanaged fleet falls
+back to bootstrap):
+
+- `reconcile` — run the full reconcile, no other changes requested
+- `audit` — reconcile steps R1–R3 only: report the diff and health history,
+  change nothing
+- `add <archetype>` — bootstrap steps B3–B7 for one new routine on the
+  existing fleet (design, author from the template, validate, deploy,
+  reconcile watchdog sources)
+
 ### Bootstrap mode — first run
 
 ```
@@ -81,15 +92,20 @@ Stagger schedules so the watchdog runs after everything else's daily window.
 Show the table; get agreement before writing prompts.
 
 **B4 Author.** Write `fleet/fleet.json` and one `fleet/prompts/<slug>.md` per
-routine per [references/fleet-manifest.md](references/fleet-manifest.md);
-write the prompts per
+routine per [references/fleet-manifest.md](references/fleet-manifest.md).
+Start each prompt from its archetype's fill-in template in `templates/`
+(placeholders in `{{...}}`), tightening per
 [references/prompt-patterns.md](references/prompt-patterns.md). If unmanaged
 routines already exist, ask which to adopt (add manifest entries mirroring
 their live config) and record the rest under `unmanaged_acknowledged` so the
-watchdog doesn't flag them.
+watchdog doesn't flag them. Then run `python3 scripts/validate_fleet.py
+fleet/fleet.json` (from the skill directory, against the ops repo checkout)
+and fix every error before proceeding.
 
-**B5 Commit.** Commit and push the ops repo *before* deploying — the watchdog
-clones it fresh and must see the manifest.
+**B5 Commit.** Copy `scripts/validate_fleet.py` into the ops repo as
+`fleet/validate_fleet.py` so the fleet stays self-checking without this
+skill installed. Commit and push the ops repo *before* deploying — the
+watchdog clones it fresh and must see the manifest.
 
 **B6 Deploy.** Create each routine from its manifest entry
 ([references/api-reference.md](references/api-reference.md) for body shape,
@@ -104,9 +120,11 @@ every repo named in any artifact contract as git sources. Record its
 manifest update (it now contains all trigger_ids).
 
 **B8 Hand off.** Summary table: every routine, schedule in the user's
-timezone, artifact, management URL. State plainly: rerun this skill to add,
-change, pause, or audit routines — never hand-edit a deployed routine without
-also updating the manifest; deletion is manual on the routines page.
+timezone, artifact, management URL, plus the validator's usage estimate
+(runs/month per routine and fleet total) so the user understands what the
+cadence costs before living with it. State plainly: rerun this skill to
+add, change, pause, or audit routines — never hand-edit a deployed routine
+without also updating the manifest; deletion is manual on the routines page.
 
 ### Reconcile mode — every later run
 
@@ -142,6 +160,11 @@ verified-consistent fleet, and drift gets caught while someone is watching.
   push, and calendar delivery channels and when to use each
 - [references/api-reference.md](references/api-reference.md) — routine API
   body shape, cron rules, connectors, environments, models
+
+Also bundled: `templates/` — fill-in prompt templates, one per archetype
+(the watchdog's template is in its reference file); `scripts/validate_fleet.py`
+— deterministic manifest validator, run at B4/R1/R6; `evals/` — test
+scenarios for maintainers of this skill (not used at runtime).
 
 ## Scope notes
 

@@ -24,7 +24,18 @@ identical to one that had nothing to do. This skill makes fleets
   OK / WARN / FAIL / IDLE-OK report with an "Action needed" list.
 - **Run the skill once** to bootstrap the whole system; **rerun it any time**
   to reconcile — it diffs the manifest against what's actually deployed and
-  repairs gaps, orphans, drift, and stale watchdog config.
+  repairs gaps, orphans, drift, and stale watchdog config. Fast paths:
+  `/routine-architect reconcile | audit | add <archetype>`.
+- A **deterministic validator** (`scripts/validate_fleet.py`, stdlib-only
+  Python) checks the manifest before every deploy: schema, artifact
+  contracts, audit-window-vs-cadence gaps, DST drift between local intent
+  and UTC crons, sub-hourly schedules — and prints per-routine usage
+  estimates (runs/month). It's copied into your ops repo so the fleet stays
+  self-checking.
+- **Fill-in prompt templates** per archetype (`templates/`), health history
+  compacted to `fleet/logs/health.jsonl` on each reconcile, and opt-in
+  [ntfy](https://ntfy.sh) push escalation when a routine fails two watchdog
+  reports in a row.
 
 ## Install
 

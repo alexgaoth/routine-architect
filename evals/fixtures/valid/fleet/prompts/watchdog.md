@@ -1,0 +1,1 @@
+You are a placeholder prompt for fixture testing. It needs to be long enough to clear the 200-byte sanity threshold, so here is filler text describing steps one through seven with an artifact contract, guardrails, and honest failure reporting as required.

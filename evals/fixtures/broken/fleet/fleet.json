@@ -1,0 +1,42 @@
+{
+  "manifest_version": 1,
+  "generated_by": "routine-architect",
+  "updated_at": "2026-07-30T21:00:00Z",
+  "timezone": "America/Los_Angeles",
+  "notify_email": "user@example.com",
+  "ops_repo": "https://github.com/example/ops-repo",
+  "watchdog": {
+    "trigger_id": "",
+    "cron_utc": "*/30 * * * *",
+    "prompt_file": "fleet/prompts/watchdog.md"
+  },
+  "routines": [
+    {
+      "slug": "Code_Digest",
+      "name": "Code digest",
+      "trigger_id": null,
+      "archetype": "digester",
+      "status": "running",
+      "cron_utc": "50 6 * * *",
+      "prompt_file": "fleet/prompts/missing.md",
+      "artifacts": [
+        {"type": "gmail_draft", "subject_prefix": "Code digest — ", "window_hours": 12},
+        {"type": "slack_message", "channel": "#general"}
+      ],
+      "purpose": "Broken on purpose."
+    },
+    {
+      "slug": "silent-fixer",
+      "name": "Silent fixer (routine-architect)",
+      "trigger_id": "trig_sf001",
+      "archetype": "alert-responder",
+      "status": "active",
+      "cron_utc": "13 5,17 * * *",
+      "prompt_file": "fleet/prompts/silent-fixer.md",
+      "artifacts": [
+        {"type": "git_commits", "repo": "https://github.com/example/webapp", "branch": "main", "window_hours": 14, "may_be_absent_when_idle": true}
+      ],
+      "purpose": "Idle-capable but no crosscheck."
+    }
+  ]
+}

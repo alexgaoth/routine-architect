@@ -1,0 +1,14 @@
+{
+  "skills": ["routine-architect"],
+  "query": "Change my code digest routine to run at 7am instead of 8am.",
+  "files": ["fixtures/valid/fleet/fleet.json"],
+  "setup": "A managed fleet exists. Injected defects: the deployed digest routine's cron differs from the manifest (someone hand-edited it), and one manifest routine was deleted from the deployment entirely.",
+  "expected_behavior": [
+    "Detects reconcile mode via the deployed 'Fleet watchdog (routine-architect)', locates the ops repo from its first git source, and reads fleet/fleet.json",
+    "Runs the FULL diff before applying the requested one-line change, and presents the classification table (DRIFT for the hand-edited cron, GAP for the deleted routine) to the user",
+    "Asks the user which direction to converge the DRIFT rather than silently overwriting either side",
+    "Applies the 7am change as a manifest edit first (manifest leads, deployment follows), re-runs scripts/validate_fleet.py, then updates the deployment",
+    "Redeploys the GAP routine and writes its new trigger_id back",
+    "Commits and pushes the manifest, verifies every active entry has a trigger_id, and reports fleet state including what changed this run"
+  ]
+}
