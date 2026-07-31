@@ -37,15 +37,21 @@ status "paused" or "retired". If you notice artifacts in Gmail or the repos
 that look like they come from automation the manifest does not declare, say
 so — that is a sign the fleet changed without a reconcile.
 
-Step 4 — Escalation. Search your own previous drafts (subject starting
-"Routine watchdog — ") from the last 3 days. If a routine you are FAILing
-now was already FAILed in the most recent report, this is a repeat failure.
+Step 4 — History. Search your own previous drafts (subject starting
+"Routine watchdog — ") and read the STATUS line of up to the last 7
+reports. Two uses: a routine you are FAILing now that was already FAILed
+in the most recent report is a repeat failure; and the streak of all-green
+reports feeds Step 5's compression.
 
 Step 5 — Report. Create ONE Gmail draft (never send) to you@example.com,
 subject "Routine watchdog — <today YYYY-MM-DD>", prefixed with "ALERT: "
 if any repeat failure exists. Body: one section per routine — status word,
 then 2–4 sentences of evidence (dates, commit hashes, draft subjects
-found). Then "Action needed": a short imperative list of what the human
+found). Quiet-streak compression: if the 7 STATUS lines you read in Step 4
+(and today's result) are all OK/IDLE-OK for every routine, compress each
+per-routine section to one line (status + one evidence clause); if fewer
+than 7 prior reports exist, or anything is WARN, FAIL, or UNKNOWN, use
+full sections. Then "Action needed": a short imperative list of what the human
 should do (including "run the routine-architect skill to reconcile"
 whenever you found UNKNOWN entries, undeclared automation, or a stale
 manifest), or "None." The VERY LAST line of the body must be

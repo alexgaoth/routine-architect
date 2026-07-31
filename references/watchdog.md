@@ -22,6 +22,12 @@ garbage," not just "didn't run."
   repo entering an artifact contract (sources list), and a new artifact
   contract *type* (verification instructions). The reconcile algorithm's
   STALE-WATCHDOG check covers both.
+- **Quiet by design** (notification-fatigue guardrails): the fleet's entire
+  human surface is ONE draft per day. Routine updates never present as
+  urgent — the `ALERT: ` prefix and any push escalation fire only on
+  *repeat* failures, and after 7 consecutive all-OK/IDLE-OK reports the
+  per-routine sections compress to single lines. A watchdog that cries
+  daily gets ignored by week two, which is worse than no watchdog.
 
 ## Status taxonomy
 
@@ -89,9 +95,11 @@ type not listed above. Report (informationally) any entries with status
 look like they come from automation the manifest does not declare, say so —
 that is a sign the fleet changed without a reconcile.
 
-Step 4 — Escalation. Search your own previous drafts (subject starting
-"Routine watchdog — ") from the last 3 days. If a routine you are FAILing
-now was already FAILed in the most recent report, this is a repeat failure.
+Step 4 — History. Search your own previous drafts (subject starting
+"Routine watchdog — ") and read the STATUS line of up to the last 7
+reports. Two uses: a routine you are FAILing now that was already FAILed
+in the most recent report is a repeat failure; and the streak of all-green
+reports feeds Step 5's compression.
 {{IF_NTFY: If any repeat failure exists, also send a push notification:
 run `curl -s -H "Title: Routine watchdog ALERT" -d "<one-line summary of
 which routines are failing and since when>" https://ntfy.sh/{{NTFY_TOPIC}}`.
@@ -102,7 +110,12 @@ has no watchdog.escalation.ntfy_topic}}
 Step 5 — Report. Create ONE Gmail draft (never send) to {{NOTIFY_EMAIL}},
 subject "Routine watchdog — <today YYYY-MM-DD>", prefixed with "ALERT: " if
 any repeat failure exists. Body: one section per routine — status word, then
-2–4 sentences of evidence (dates, commit hashes, draft subjects found). Then
+2–4 sentences of evidence (dates, commit hashes, draft subjects found).
+Quiet-streak compression: if the 7 STATUS lines you read in Step 4 (and
+today's result) are all OK/IDLE-OK for every routine, compress each
+per-routine section to one line (status + one evidence clause); if fewer
+than 7 prior reports exist, or anything is WARN, FAIL, or UNKNOWN, use
+full sections. Then
 "Action needed": a short imperative list of what the human should do
 (including "run the routine-architect skill to reconcile" whenever you found
 UNKNOWN entries, undeclared automation, or a stale manifest), or "None."

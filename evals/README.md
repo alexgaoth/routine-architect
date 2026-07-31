@@ -11,6 +11,8 @@ against `expected_behavior`.
 - `scenario-3-adopt-unmanaged.json` — pre-existing routines to adopt
 - `scenario-4-quickstart.json` — express path: four questions, starter
   fleet from the example, validation not skipped
+- `scenario-5-todo-onboarding.json` — fleet derived from a pasted todo
+  list: mapping, stays-yours handback, 3+watchdog cap, verbatim tracing
 - `fixtures/valid/`, `fixtures/broken/` — manifests for
   `scripts/validate_fleet.py` (the broken one must FAIL with ≥6 errors)
 

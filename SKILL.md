@@ -78,7 +78,12 @@ Bootstrap Progress:
 - [ ] B8. Hand off
 ```
 
-**B1 Interview.** First decide the depth. **Express** (default for
+**B1 Interview.** Open with the todo-list invitation from
+[references/todo-mapping.md](references/todo-mapping.md): if the user
+shares a todo list, notes, or board, derive the fleet proposal from it
+under that file's rules (quote-never-invent, cap at 3 + watchdog, list the
+not-automatable items back respectfully) — this replaces most interview
+questions in either path. Then decide the depth. **Express** (default for
 newcomers, vague requests like "set me up", or the `quickstart` argument):
 ask only the four questions in
 [references/defaults.md](references/defaults.md) and default everything
@@ -133,10 +138,16 @@ every repo named in any artifact contract as git sources. Record its
 `trigger_id` in the manifest's `watchdog` block. Commit and push the
 manifest update (it now contains all trigger_ids).
 
-**B8 Hand off.** Summary table: every routine, schedule in the user's
-timezone, artifact, management URL, plus the validator's usage estimate
-(runs/month per routine and fleet total) so the user understands what the
-cadence costs before living with it. State plainly: rerun this skill to
+**B8 Hand off.** Offer a smoke test first: run the watchdog once now (with
+consent — it costs a real run) so the user sees their first report today
+instead of tomorrow. Then the summary table: every routine, schedule in
+the user's timezone, artifact, management URL, plus the validator's usage
+estimate (runs/month per routine and fleet total) so the user understands
+what the cadence costs before living with it. Set expectations for the
+first week (what arrives when, per the README's "Your first week") and
+name the kill switch: "pause everything" any time disables every managed
+routine immediately — deployments first, no reconcile steps before the
+disabling. State plainly: rerun this skill to
 add, change, pause, or audit routines — never hand-edit a deployed routine
 without also updating the manifest; deletion is manual on the routines page.
 
@@ -156,7 +167,13 @@ Reconcile Progress:
 The full diff algorithm, each category's remedy, and the self-discovery rule
 (watchdog config → ops repo → manifest) are specified rigorously in
 [references/fleet-manifest.md](references/fleet-manifest.md). Follow it
-exactly; do not improvise a partial reconcile. Even when the user asked only
+exactly; do not improvise a partial reconcile. One sanctioned exception:
+"pause everything" is a kill switch — skip R1–R7, disable every
+managed-suffix deployment first (orphans and watchdog included), then
+update the manifest; the exact order is in fleet-manifest.md's lifecycle
+rules. If the user shares an updated todo list during reconcile, apply
+[references/todo-mapping.md](references/todo-mapping.md)'s re-diff rules
+in R4. Even when the user asked only
 for one small change, run the full diff first — the change lands on top of a
 verified-consistent fleet, and drift gets caught while someone is watching.
 
@@ -174,6 +191,8 @@ verified-consistent fleet, and drift gets caught while someone is watching.
   push, and calendar delivery channels and when to use each
 - [references/defaults.md](references/defaults.md) — the express bootstrap:
   four questions, everything else defaulted
+- [references/todo-mapping.md](references/todo-mapping.md) — deriving the
+  fleet from the user's own todo list / notes / board
 - [references/api-reference.md](references/api-reference.md) — routine API
   body shape, cron rules, connectors, environments, models
 

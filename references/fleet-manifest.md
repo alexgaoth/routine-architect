@@ -115,6 +115,10 @@ Field rules:
 - `watchdog.escalation.ntfy_topic` (optional): enables push notification on
   repeat failures — see [notifications.md](notifications.md) for topic-name
   security.
+- `paused_by_kill_switch` (top-level, transient): present only between a
+  kill-switch pause and the resuming reconcile — the list of slugs the
+  kill switch flipped from `active`, so resume restores exactly that set.
+  See the Pause-all lifecycle rule.
 
 **Validator:** `scripts/validate_fleet.py fleet/fleet.json` checks all of
 the rules above deterministically (schema, slugs, naming, cron validity and
@@ -184,7 +188,10 @@ Present the full classification table to the user before applying anything.
 
 **R4 — Intent.** Apply what the user actually asked for (new routine, cadence
 change, pause, etc.) as manifest edits + prompt-file edits first. New
-routines follow bootstrap steps B3–B4 in miniature.
+routines follow bootstrap steps B3–B4 in miniature. If the user shared an
+updated todo list, run [todo-mapping.md](todo-mapping.md)'s reconcile-time
+re-diff: propose additions for new recurring items, flag routines whose
+source item is gone.
 
 **R5 — Converge.** Apply all remedies from R3 plus deployments for R4. One
 routine at a time; confirm each parsed next-run time.
@@ -206,6 +213,25 @@ leave open.
   Never the reverse order — the manifest leads, deployment follows.
 - **Pause**: set `status: paused` → disable deployment. Watchdog skips paused
   entries (reports them as PAUSED, not FAIL).
+- **Pause all (kill switch)**: when the user says "pause everything" /
+  "stop it all", this is the ONE sanctioned exception to the run-all-steps
+  reconcile mandate — R1–R7 are short-circuited and disabling comes FIRST.
+  Order: (1) one confirmation; (2) list deployed routines and disable
+  every deployment whose name carries the `(routine-architect)` suffix —
+  manifest entries AND orphans alike, watchdog included — plus any
+  `unmanaged_acknowledged` entry the user asks about; (3) only then flip
+  manifest statuses: ONLY routines currently `active` become `paused` —
+  `retired` stays `retired`, already-`paused` stays `paused` (their
+  deployments were already disabled, so step (2)'s suffix sweep loses
+  nothing) — and record the flipped slugs in a transient top-level field
+  `"paused_by_kill_switch": ["slug", ...]`; (4) commit, push, and report
+  what was disabled (name + trigger_id). No Gmail searches, no health
+  compaction, no diff table — speed is the point. Resuming is a normal
+  full reconcile that re-enables the watchdog deployment, re-activates
+  exactly those slugs in `paused_by_kill_switch` that are still `paused`
+  (one retired or otherwise changed in between keeps its newer status),
+  removes that field, and leaves every other status as the user had set
+  it; the full pass also picks up anything the shortcut skipped.
 - **Retire**: set `status: retired` → disable deployment → user deletes
   manually when ready. Keep the entry and prompt file for history; a retired
   slug is never reused.
@@ -219,7 +245,8 @@ Before ending any bootstrap or reconcile, verify:
 - [ ] `scripts/validate_fleet.py fleet/fleet.json` exits PASS; `updated_at` refreshed
 - [ ] Every `active` routine deployed, enabled, trigger_id recorded
 - [ ] Every deployed managed routine matches its manifest entry field-for-field
-- [ ] Watchdog deployed, its sources ⊇ {ops repo} ∪ {all artifact repos},
-      ops repo listed first
+- [ ] Watchdog deployed and enabled (unless mid-kill-switch, i.e.
+      `paused_by_kill_switch` present), its sources ⊇ {ops repo} ∪
+      {all artifact repos}, ops repo listed first
 - [ ] Ops repo committed AND pushed
 - [ ] No orphan or unmanaged routine left unclassified

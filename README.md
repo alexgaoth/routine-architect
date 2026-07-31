@@ -37,7 +37,11 @@ connector enabled on claude.ai, and a GitHub repo or two.
 Claude asks you **four questions** (which repos to watch, which repo the
 fleet may write to, your email + timezone, anything agents must never
 touch) and defaults every other decision — see
-[`references/defaults.md`](references/defaults.md). You get the **starter
+[`references/defaults.md`](references/defaults.md). **Have a todo list?**
+Paste it (or point at your notes/board) and the fleet gets designed from
+what's actually on your plate: each proposed routine quotes the item it
+serves, and the things only you can do are handed back, not automated —
+see [`references/todo-mapping.md`](references/todo-mapping.md). You get the **starter
 fleet**: a nightly code digest plus the watchdog. Both are read-only; the
 only thing they ever produce is drafts in your own Gmail. Next-day
 upgrades, once you've seen it work: `/routine-architect add
@@ -74,10 +78,36 @@ Three ideas carry the whole design:
    config. Fast paths: `/routine-architect quickstart | reconcile | audit |
    add <archetype>`.
 
+## Your first week
+
+No mystery about what happens behind the curtain:
+
+- **Day 0 (setup):** you answer the questions, see the fleet table and the
+  runs/month estimate, and say yes before anything deploys. Offer at the
+  end: run the watchdog once immediately so your first report arrives in
+  minutes, not tomorrow.
+- **Day 1 morning:** two drafts in Gmail — last night's code digest, and
+  the watchdog's report on it (expect `code-digest: OK`).
+- **Rest of week 1:** one digest + one watchdog report per day. `IDLE-OK`
+  on quiet days is correct behavior, not a bug. If a routine breaks, the
+  watchdog's report says so with evidence and an "Action needed" line —
+  and only *repeat* failures escalate to `ALERT:`.
+- **After a fully-green week:** reports compress to one line per routine.
+  The healthy steady state is a glance, not a read. When you're ready:
+  `/routine-architect add alert-responder` (or share your updated todo
+  list and let it propose).
+
+**The kill switch:** say "pause everything" to `/routine-architect` — every
+managed routine including the watchdog is disabled immediately, before any
+other bookkeeping. Resume the same way: routines you had individually
+paused or retired earlier stay that way. (Belt-and-suspenders: every routine also has a manual
+toggle at claude.ai/code/routines.)
+
 ## Making it yours
 
 | you want | where to look |
 |---|---|
+| routines derived from your actual todo list | [`references/todo-mapping.md`](references/todo-mapping.md) — mapping rules, and what stays yours |
 | a different mix of routines | [`references/routine-catalog.md`](references/routine-catalog.md) — 7 archetypes with example fleet shapes |
 | ready-made prompts to fill in | [`templates/`](templates/) — one per archetype |
 | push notifications, SMS, calendar, webhooks | [`references/notifications.md`](references/notifications.md) |

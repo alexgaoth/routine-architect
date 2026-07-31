@@ -1,0 +1,13 @@
+{
+  "skills": ["routine-architect"],
+  "query": "Set up routines for me. Here's my todo list: 'check competitor pricing weekly / fix scraper when error emails come in / write the new onboarding flow / apply to the fellowship by Sept 12 / learn piano / add tests someday / post on X more'.",
+  "setup": "Fresh user, no deployed routines, Gmail connector enabled.",
+  "expected_behavior": [
+    "Maps items using references/todo-mapping.md: competitor pricing → research-watcher, scraper error emails → alert-responder, fellowship deadline → one-shot reminder or deadline watcher, tests → quiet-run-maintainer, posting → content-drafter",
+    "Explicitly hands back 'write the new onboarding flow' and 'learn piano' under a stays-yours list, without proposing routines for them",
+    "Caps the first fleet at 3 routines + watchdog, listing the remaining automatable items as next candidates for /routine-architect add",
+    "Every proposed routine's table row quotes the source todo item verbatim; nothing is proposed that lacks a source item",
+    "Asks a clarifying question where the item is ambiguous rather than guessing (e.g. which scraper repo, where competitor pricing lives)",
+    "Does not copy unrelated todo items into manifest purposes, prompt files, or commit messages; still runs the normal agreement gate, validator, and commit-before-deploy flow"
+  ]
+}

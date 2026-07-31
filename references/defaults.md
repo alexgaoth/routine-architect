@@ -7,6 +7,11 @@ say that to the user so no default feels like a commitment.
 
 ## The four questions (ask nothing else in express mode)
 
+Before asking, extend the todo-list invitation from
+[todo-mapping.md](todo-mapping.md) — a shared list typically answers
+questions 1 and 4 by itself, and may upgrade the starter composition to a
+todo-derived fleet (still capped at 3 + watchdog).
+
 1. **Which repos should be watched?** (GitHub URLs; also determines digest
    sources)
 2. **Which repo may the fleet write to** as the ops repo? (offer: a new
