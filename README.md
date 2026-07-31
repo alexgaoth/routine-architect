@@ -1,15 +1,15 @@
 # routine-architect
 
-**Wake up to a report on your own automation.** This is an
+**Wake up to a report on your own automation.** An
 [Agent Skill](https://agentskills.io) for Claude Code that sets up a fleet
-of scheduled cloud agents ("routines") for you — a nightly digest of what
-happened in your repos, responders that investigate your error emails and
-push fixes, watchers for deadlines and releases — plus a **watchdog** that
-audits all of them daily, so a routine can never die silently.
+of scheduled cloud agents ("routines") — a nightly digest of what happened
+in your repos, responders that investigate error emails and push fixes,
+watchers for deadlines and releases — plus a **watchdog** that audits them
+all daily, so a routine can never die silently.
 
-Every morning, a draft like this is waiting in your Gmail (shown here with
-the optional alert-responder upgrade installed; the starter fleet's first
-report has just the digest line):
+Every morning, a draft like this waits in your Gmail (the starter fleet's
+first report has just the digest line; this one includes the optional
+alert-responder upgrade):
 
 > **Routine watchdog — 2026-07-30**
 >
@@ -34,22 +34,26 @@ connector enabled on claude.ai, and a GitHub repo or two.
 /routine-architect quickstart
 ```
 
-Claude asks you **four questions** (which repos to watch, which repo the
+Claude asks **four questions** — which repos to watch, which repo the
 fleet may write to, your email + timezone, anything agents must never
-touch) and defaults every other decision — see
-[`references/defaults.md`](references/defaults.md). **Have a todo list?**
-Paste it (or point at your notes/board) and the fleet gets designed from
-what's actually on your plate: each proposed routine quotes the item it
-serves, and the things only you can do are handed back, not automated —
-see [`references/todo-mapping.md`](references/todo-mapping.md). You get the **starter
-fleet**: a nightly code digest plus the watchdog. Both are read-only; the
-only thing they ever produce is drafts in your own Gmail. Next-day
-upgrades, once you've seen it work: `/routine-architect add
-alert-responder`, ntfy push escalation, more repos.
+touch — and defaults every other decision
+([`references/defaults.md`](references/defaults.md)).
 
-Prefer to see the end state first? [`examples/starter-fleet/`](examples/starter-fleet/)
-is the complete ops-repo content the quickstart deploys, and it passes the
-bundled validator as-is.
+**Have a todo list?** Paste it (or point at your notes/board) and the
+fleet is designed from what's actually on your plate: each proposed
+routine quotes the item it serves, and items only you can do are handed
+back, not automated
+([`references/todo-mapping.md`](references/todo-mapping.md)).
+
+You get the **starter fleet**: a nightly code digest plus the watchdog.
+Both are read-only; their only output is drafts in your own Gmail. Once
+you've seen it work: `/routine-architect add alert-responder`, ntfy push
+escalation, more repos.
+
+Prefer to see the end state first?
+[`examples/starter-fleet/`](examples/starter-fleet/) is the complete
+ops-repo content the quickstart deploys, and it passes the bundled
+validator as-is.
 
 ## How it works
 
@@ -71,7 +75,7 @@ Three ideas carry the whole design:
    deterministically before anything deploys.
 2. **Every routine leaves a machine-checkable artifact** — a dated Gmail
    draft, pushed commits, an append-only log section. That's how the
-   watchdog (and you) can tell "idle" from "dead".
+   watchdog (and you) tell "idle" from "dead".
 3. **Run once to set up, rerun to maintain.** The first run bootstraps
    everything; any later run *reconciles* — diffing the manifest against
    what's actually deployed and repairing gaps, orphans, drift, and stale
@@ -80,27 +84,24 @@ Three ideas carry the whole design:
 
 ## Your first week
 
-No mystery about what happens behind the curtain:
-
 - **Day 0 (setup):** you answer the questions, see the fleet table and the
-  runs/month estimate, and say yes before anything deploys. Offer at the
-  end: run the watchdog once immediately so your first report arrives in
-  minutes, not tomorrow.
+  runs/month estimate, and say yes before anything deploys. Optional at
+  the end: run the watchdog once immediately, so your first report arrives
+  in minutes instead of tomorrow.
 - **Day 1 morning:** two drafts in Gmail — last night's code digest, and
   the watchdog's report on it (expect `code-digest: OK`).
 - **Rest of week 1:** one digest + one watchdog report per day. `IDLE-OK`
   on quiet days is correct behavior, not a bug. If a routine breaks, the
-  watchdog's report says so with evidence and an "Action needed" line —
-  and only *repeat* failures escalate to `ALERT:`.
-- **After a fully-green week:** reports compress to one line per routine.
-  The healthy steady state is a glance, not a read. When you're ready:
-  `/routine-architect add alert-responder` (or share your updated todo
-  list and let it propose).
+  report says so with evidence and an "Action needed" line — and only
+  *repeat* failures escalate to `ALERT:`.
+- **After a fully-green week:** reports compress to one line per routine —
+  a glance, not a read. Ready for more? `/routine-architect add
+  alert-responder`, or share your updated todo list and let it propose.
 
 **The kill switch:** say "pause everything" to `/routine-architect` — every
 managed routine including the watchdog is disabled immediately, before any
 other bookkeeping. Resume the same way: routines you had individually
-paused or retired earlier stay that way. (Belt-and-suspenders: every routine also has a manual
+paused or retired earlier stay that way. (Every routine also has a manual
 toggle at claude.ai/code/routines.)
 
 ## Making it yours
@@ -117,15 +118,15 @@ toggle at claude.ai/code/routines.)
 
 ## FAQ
 
-**What does it cost?** Each routine run is a cloud Claude session billed to
-your plan's usage. The validator prints runs/month per routine before you
-deploy (starter fleet: ~61 runs/month, mostly short sessions on Sonnet).
+**What does it cost?** Each routine run is a cloud Claude session billed
+to your plan's usage. The validator prints runs/month per routine before
+you deploy (starter fleet: ~61 runs/month, mostly short Sonnet sessions).
 
-**Is it safe?** Defaults are deliberately conservative: drafts not sent
-email, read-only wherever possible, append-only logs, no force-push, no
-credentials anywhere in prompts or repos, least-privilege tool lists.
-Write-access routines exist (the alert responder pushes fixes) but are
-never part of the default setup — you opt in per routine.
+**Is it safe?** Defaults are conservative: drafts not sent email,
+read-only wherever possible, append-only logs, no force-push, no
+credentials in prompts or repos, least-privilege tool lists. Write-access
+routines exist (the alert responder pushes fixes) but are opt-in per
+routine, never part of the default setup.
 
 **I already have routines I made by hand.** The skill detects them and
 offers to adopt each into the manifest (so the watchdog covers it) or
@@ -136,9 +137,9 @@ record it as acknowledged-unmanaged. Nothing is changed without asking.
 by design, on claude.ai's routines page — the skill never deletes.
 
 **Can routines see my laptop / my .env files?** No. They run in isolated
-cloud sandboxes with fresh clones of the repos you granted. Gitignored
-files don't exist there; a routine can detect that a credential is probably
-missing in production but only you can supply it.
+cloud sandboxes with fresh clones of the repos you granted; gitignored
+files don't exist there. A routine can detect that a production credential
+is probably missing, but only you can supply it.
 
 ## Troubleshooting
 
@@ -165,7 +166,7 @@ routine-architect/
 └── evals/                    # test scenarios for skill maintainers
 ```
 
-No plugin? Copy this folder to `~/.claude/skills/routine-architect/`
-instead — everything works the same.
+No plugin? Copy this folder to `~/.claude/skills/routine-architect/` —
+everything works the same.
 
 MIT-style: use, modify, share freely.

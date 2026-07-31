@@ -1,10 +1,9 @@
 # Todo-list onboarding
 
-The best fleet design input isn't an interview — it's the list the user
+The best fleet-design input isn't an interview — it's the list the user
 already keeps. When a user shares a todo list, notes file, or project
-board, derive the fleet from it. This grounds every routine in something
-they actually want done, which is the difference between automation that
-gets kept and automation that gets abandoned.
+board, derive the fleet from it: a routine grounded in something they
+actually want done gets kept; one invented for them gets abandoned.
 
 ## Invitation
 
@@ -30,10 +29,9 @@ Never require it. Never pressure a second time.
 **Explicitly NOT automatable — say so, respectfully.** Deep work ("design
 the new architecture"), one-time builds ("make the game"), decisions
 ("choose a direction"), learning ("study Rust"), relationships, and
-anything the user clearly wants to do themselves. List these back under a
-heading like "stays yours — no routine proposed", one line each. A tool
-that claims it can automate thinking loses the user's trust for the items
-it genuinely can automate.
+anything the user clearly wants to do themselves. List these back under
+"stays yours — no routine proposed", one line each. A tool that claims it
+can automate thinking loses trust for the items it genuinely can automate.
 
 ## Rules (all mandatory)
 

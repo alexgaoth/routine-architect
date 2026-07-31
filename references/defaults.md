@@ -1,9 +1,8 @@
 # Express defaults
 
-The express bootstrap path exists so a newcomer reaches a working, watched
-fleet by answering only the questions that cannot be defaulted. Everything
-else comes from this table. Reconcile runs can change any of it later —
-say that to the user so no default feels like a commitment.
+Express bootstrap: the user answers only what cannot be defaulted;
+everything else comes from this table. Any reconcile run can change any of
+it later — say so, so no default feels like a commitment.
 
 ## The four questions (ask nothing else in express mode)
 
@@ -41,22 +40,21 @@ to the connectors page and pause there.
 
 ## Express flow
 
-Express is bootstrap steps B1–B8 with B1 collapsed to the four questions,
-B3 collapsed to presenting the starter composition table for a yes/no, and
-B4 starting from `examples/starter-fleet/` (already validator-PASSing)
-instead of blank templates. Everything from B5 on is identical — the
-manifest, validator, commit-before-deploy, and watchdog-last rules never
-relax.
+Bootstrap B1–B8 with B1 collapsed to the four questions, B2 answered by
+question two (the ops repo), B3 collapsed to a yes/no on the starter
+composition table, and B4 starting from `examples/starter-fleet/` (already
+validator-PASSing) instead of blank templates. B5 onward is identical — the manifest, validator,
+commit-before-deploy, and watchdog-last rules never relax.
 
-After the first watchdog report lands, the natural upgrades (suggest, don't
-push): add an alert-responder if they have error emails, a research-watcher
-for deadlines, ntfy escalation, sent-email promotion. Each is a
-`/routine-architect add <archetype>` or reconcile run away.
+After the first watchdog report lands, suggest (don't push) upgrades: an
+alert-responder for error emails, a research-watcher for deadlines, ntfy
+escalation, sent-email promotion — each one `/routine-architect add
+<archetype>` or a reconcile run away.
 
 ## When to leave express
 
-Leave express and run the full interview (B1) when the user: names specific
-alerts/errors they want acted on, wants any routine that writes to a repo,
-has pre-existing routines to adopt, or asks for channels beyond email. A
-user who answers the four questions with a paragraph of requirements is
-telling you they want the full path — honor that.
+Run the full interview (B1) instead when the user: names specific
+alerts/errors to act on, wants any routine that writes to a repo, has
+pre-existing routines to adopt, or asks for channels beyond email. A user
+who answers the four questions with a paragraph of requirements wants the
+full path — honor that.

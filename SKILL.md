@@ -81,20 +81,16 @@ Bootstrap Progress:
 **B1 Interview.** Open with the todo-list invitation from
 [references/todo-mapping.md](references/todo-mapping.md): if the user
 shares a todo list, notes, or board, derive the fleet proposal from it
-under that file's rules (quote-never-invent, cap at 3 + watchdog, list the
-not-automatable items back respectfully) — this replaces most interview
-questions in either path. Then decide the depth. **Express** (default for
-newcomers, vague requests like "set me up", or the `quickstart` argument):
-ask only the four questions in
-[references/defaults.md](references/defaults.md) and default everything
-else from its table. Express still runs B2–B4, just collapsed: B2 is
-answered by question two; B3 is presenting the starter composition for a
-yes/no; B4 adapts `examples/starter-fleet/` instead of blank templates —
-and its validator run is never skipped. B5 onward is identical in both
-paths. **Full** (the user names
-specific alerts to act on, wants write-access routines, or has detailed
-requirements): establish which repos matter and what "wrong" looks like for
-each; how they want to be reached
+under that file's rules — this replaces most interview questions in either
+path. Then decide the depth. **Express** (default for newcomers, vague
+requests like "set me up", or the `quickstart` argument): ask only the
+four questions in [references/defaults.md](references/defaults.md) and
+default everything else from its table. Express still runs B2–B4,
+collapsed exactly as that file's "Express flow" section specifies — the
+validator run is never skipped. B5 onward is identical in both paths.
+**Full** (the user names specific alerts to act on, wants write-access
+routines, or has detailed requirements): establish which repos matter and
+what "wrong" looks like for each; how they want to be reached
 ([references/notifications.md](references/notifications.md)); what an agent
 may do unattended vs. what needs review; their timezone and when reports
 should arrive. In both paths, verify which MCP connectors are connected
@@ -141,15 +137,15 @@ manifest update (it now contains all trigger_ids).
 **B8 Hand off.** Offer a smoke test first: run the watchdog once now (with
 consent — it costs a real run) so the user sees their first report today
 instead of tomorrow. Then the summary table: every routine, schedule in
-the user's timezone, artifact, management URL, plus the validator's usage
-estimate (runs/month per routine and fleet total) so the user understands
-what the cadence costs before living with it. Set expectations for the
-first week (what arrives when, per the README's "Your first week") and
-name the kill switch: "pause everything" any time disables every managed
-routine immediately — deployments first, no reconcile steps before the
-disabling. State plainly: rerun this skill to
-add, change, pause, or audit routines — never hand-edit a deployed routine
-without also updating the manifest; deletion is manual on the routines page.
+the user's timezone, artifact, management URL, and the validator's usage
+estimate (runs/month per routine and fleet total) — the user should know
+what the cadence costs before living with it. Set first-week expectations
+(what arrives when, per the README's "Your first week") and name the kill
+switch: "pause everything" any time disables every managed routine
+immediately — deployments first, no reconcile steps before the disabling.
+State plainly: rerun this skill to add, change, pause, or audit routines —
+never hand-edit a deployed routine without also updating the manifest;
+deletion is manual on the routines page.
 
 ### Reconcile mode — every later run
 
