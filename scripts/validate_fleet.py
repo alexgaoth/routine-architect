@@ -212,6 +212,9 @@ def main():
     wd_prompt = wd.get("prompt_file", "fleet/prompts/watchdog.md")
     if not os.path.isfile(os.path.join(root, wd_prompt)):
         err(105, f"watchdog prompt file '{wd_prompt}' does not exist.")
+    if wd_cron:
+        check_dst({"slug": "watchdog", "cadence_local": wd.get("cadence_local")},
+                  wd_cron, tz_name)
 
     slugs = set()
     total_runs = 0.0

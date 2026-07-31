@@ -1,0 +1,13 @@
+{
+  "skills": ["routine-architect"],
+  "query": "/routine-architect quickstart",
+  "setup": "Fresh user in Europe/Berlin, no deployed routines, Gmail connector enabled, owns github.com/example/webapp. Vague intent: just wants to try the thing.",
+  "expected_behavior": [
+    "Detects bootstrap mode, enters the express path, and asks ONLY the four questions from references/defaults.md (watched repos, ops repo, email+timezone, forbidden areas) — no interview beyond them",
+    "Presents the starter composition (digest + watchdog) for a yes/no instead of an open design discussion",
+    "Adapts examples/starter-fleet/ rather than authoring from blank templates: replaces placeholders, sets timezone Europe/Berlin, recomputes BOTH cron_utc values from the default local times (digest 11:50pm, watchdog 8:00am), and updates both cadence_local fields to match",
+    "Runs scripts/validate_fleet.py on the adapted manifest and resolves any finding before committing — the express path must not skip B4's validation",
+    "Commits and pushes the ops repo before deploying, deploys digest then watchdog, writes trigger_ids back, and re-pushes",
+    "Hand-off states the runs/month estimate and that reconcile runs can change any defaulted choice later"
+  ]
+}

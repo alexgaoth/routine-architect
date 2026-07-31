@@ -6,9 +6,11 @@ built-in runner: give each scenario's `query` to a fresh Claude Code session
 with the skill installed (mock or sandbox the routine API), and judge
 against `expected_behavior`.
 
-- `scenario-1-bootstrap.json` — cold start, no fleet exists
+- `scenario-1-bootstrap.json` — cold start, full interview path
 - `scenario-2-reconcile-drift.json` — fleet exists, drift injected
 - `scenario-3-adopt-unmanaged.json` — pre-existing routines to adopt
+- `scenario-4-quickstart.json` — express path: four questions, starter
+  fleet from the example, validation not skipped
 - `fixtures/valid/`, `fixtures/broken/` — manifests for
   `scripts/validate_fleet.py` (the broken one must FAIL with ≥6 errors)
 

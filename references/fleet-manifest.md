@@ -50,12 +50,13 @@ and treat the run as a **repair** (reconcile with a missing-watchdog defect).
   "manifest_version": 1,
   "generated_by": "routine-architect",
   "updated_at": "2026-07-30T21:00:00Z",
-  "timezone": "America/Los_Angeles",
+  "timezone": "America/Phoenix",
   "notify_email": "user@example.com",
   "ops_repo": "https://github.com/org/ops-repo",
   "watchdog": {
     "trigger_id": "trig_...",
     "cron_utc": "0 15 * * *",
+    "cadence_local": {"cron_local": "0 8 * * *"},
     "prompt_file": "fleet/prompts/watchdog.md",
     "escalation": {"ntfy_topic": "long-random-topic-name"}
   },
@@ -70,7 +71,7 @@ and treat the run as a **repair** (reconcile with a missing-watchdog defect).
       "archetype": "digest-notifier",
       "status": "active",
       "cron_utc": "50 6 * * *",
-      "cadence_human": "daily 11:50pm America/Los_Angeles",
+      "cadence_human": "daily 11:50pm America/Phoenix",
       "cadence_local": {"cron_local": "50 23 * * *"},
       "prompt_file": "fleet/prompts/code-digest.md",
       "model": "claude-sonnet-5",

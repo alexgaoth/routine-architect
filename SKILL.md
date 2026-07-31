@@ -53,6 +53,10 @@ If the skill was invoked with arguments, they select a fast path (mode
 detection still runs first, and a fast path on an unmanaged fleet falls
 back to bootstrap):
 
+- `quickstart` — express bootstrap: the starter fleet (digest + watchdog)
+  with every choice defaulted per
+  [references/defaults.md](references/defaults.md), asking only the four
+  questions listed there
 - `reconcile` — run the full reconcile, no other changes requested
 - `audit` — reconcile steps R1–R3 only: report the diff and health history,
   change nothing
@@ -74,12 +78,22 @@ Bootstrap Progress:
 - [ ] B8. Hand off
 ```
 
-**B1 Interview.** Establish: which repos matter and what "wrong" looks like
-for each; how they want to be reached
+**B1 Interview.** First decide the depth. **Express** (default for
+newcomers, vague requests like "set me up", or the `quickstart` argument):
+ask only the four questions in
+[references/defaults.md](references/defaults.md) and default everything
+else from its table. Express still runs B2–B4, just collapsed: B2 is
+answered by question two; B3 is presenting the starter composition for a
+yes/no; B4 adapts `examples/starter-fleet/` instead of blank templates —
+and its validator run is never skipped. B5 onward is identical in both
+paths. **Full** (the user names
+specific alerts to act on, wants write-access routines, or has detailed
+requirements): establish which repos matter and what "wrong" looks like for
+each; how they want to be reached
 ([references/notifications.md](references/notifications.md)); what an agent
 may do unattended vs. what needs review; their timezone and when reports
-should arrive; which MCP connectors are connected (a routine can only use
-connectors the user has).
+should arrive. In both paths, verify which MCP connectors are connected
+before designing (a routine can only use connectors the user has).
 
 **B2 Ops repo.** Pick with the user one git repo the routines can push to —
 an existing infra repo or a new dedicated one. The manifest, prompt files,
@@ -158,13 +172,17 @@ verified-consistent fleet, and drift gets caught while someone is watching.
   overseer: design rules and fill-in template
 - [references/notifications.md](references/notifications.md) — email, SMS,
   push, and calendar delivery channels and when to use each
+- [references/defaults.md](references/defaults.md) — the express bootstrap:
+  four questions, everything else defaulted
 - [references/api-reference.md](references/api-reference.md) — routine API
   body shape, cron rules, connectors, environments, models
 
-Also bundled: `templates/` — fill-in prompt templates, one per archetype
-(the watchdog's template is in its reference file); `scripts/validate_fleet.py`
-— deterministic manifest validator, run at B4/R1/R6; `evals/` — test
-scenarios for maintainers of this skill (not used at runtime).
+Also bundled: `examples/starter-fleet/` — a complete validator-passing ops
+repo `fleet/` to adapt (express path starts here); `templates/` — fill-in
+prompt templates, one per archetype (the watchdog's template is in its
+reference file); `scripts/validate_fleet.py` — deterministic manifest
+validator, run at B4/R1/R6; `evals/` — test scenarios for maintainers of
+this skill (not used at runtime).
 
 ## Scope notes
 
