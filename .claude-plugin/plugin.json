@@ -1,0 +1,11 @@
+{
+  "name": "routine-architect",
+  "description": "Designs, deploys, and maintains a fleet of scheduled cloud agents (routines) — digests, alert responders, maintainers, watchers — governed by a committed fleet manifest and audited by a manifest-driven watchdog routine.",
+  "author": {
+    "name": "Alex Gao",
+    "url": "https://alexgaoth.com"
+  },
+  "homepage": "https://github.com/alexgaoth/routine-architect",
+  "license": "MIT",
+  "keywords": ["routines", "scheduled-agents", "automation", "cron", "watchdog", "fleet"]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "alexgaoth-plugins",
+  "owner": {
+    "name": "Alex Gao",
+    "url": "https://github.com/alexgaoth"
+  },
+  "description": "Plugins by Alex Gao",
+  "plugins": [
+    {
+      "name": "routine-architect",
+      "source": "./",
+      "description": "Set up and maintain a self-monitoring fleet of scheduled cloud agents: notification digests, code maintainers, alert responders, plus a watchdog that audits them all from a committed fleet manifest.",
+      "category": "automation",
+      "tags": ["routines", "automation", "watchdog", "scheduled-agents"]
+    }
+  ]
+}
